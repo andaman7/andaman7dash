@@ -1,0 +1,7 @@
+{
+  "name": "andaman7dash",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

@@ -1,0 +1,8 @@
+{
+  "appId": "io.ionic.starter",
+  "appName": "andaman7dash",
+  "bundledWebRuntime": false,
+  "npmClient": "npm",
+  "webDir": "www",
+  "cordova": {}
+}
