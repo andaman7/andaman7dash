@@ -1,20 +1,109 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>
-      Blank
+    <ion-buttons *ngIf="!showSearchbar" slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title *ngIf="!showSearchbar">
+      Patient List
     </ion-title>
+    <ion-searchbar *ngIf="showSearchbar" showCancelButton="always" [(ngModel)]="queryText" (ionChange)="filterPatients(queryText)" (ionCancel)="showSearchbar = false" placeholder="Search by name"></ion-searchbar>
+    <ion-buttons slot="end">
+      <ion-button *ngIf="!ios && !showSearchbar" (click)="showSearchbar = true">
+        <ion-icon slot="icon-only" name="search"></ion-icon>
+      </ion-button>
+      <ion-button *ngIf="!showSearchbar" (click)="presentFilter()">
+        <span *ngIf="ios">Filter</span>
+        <span *ngIf="!ios">
+          <ion-icon slot="icon-only" name="options"></ion-icon>
+        </span>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
+      <ion-title size="large">Patient List</ion-title>
+    </ion-toolbar>
+    <ion-toolbar>
+      <ion-searchbar [(ngModel)]="queryText" (ionChange)="filterPatients(queryText)" placeholder="Search by name"></ion-searchbar>
     </ion-toolbar>
   </ion-header>
 
+  <ion-fab horizontal="end" vertical="bottom" slot="fixed">
+    <ion-fab-button>
+      <ion-icon [ios]="'person-add' + '-outline'" [md]="'person-add' + '-sharp'"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
   <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
+    <ion-list>
+      <ion-item-divider sticky>
+        Sort
+        <p>
+          <ion-chip color="primary" slot="end" *ngFor="let filter of filterChips; let i = index;">
+            <ion-label>{{ filter }}</ion-label>
+            <ion-icon 
+              [ios]="'close-circle' + '-outline'" 
+              [md]="'close-circle' + '-sharp'"
+              (click)="removeFilter(filter)">
+            </ion-icon>
+          </ion-chip>
+        </p>
+        <ion-button fill="clear" slot="end" (click)="sortPatients('risk')">
+          <ion-icon *ngIf="!sortReverse; else ascend" [ios]="'caret-down' + '-outline'" [md]="'caret-down' + '-sharp'"></ion-icon>
+          <ng-template #ascend>
+            <ion-icon [ios]="'caret-up' + '-outline'" [md]="'caret-up' + '-sharp'"></ion-icon>
+          </ng-template>
+          Screened Risk
+        </ion-button>
+      </ion-item-divider>
+      <div *ngFor="let p of filteredPatients; let i = index">
+        <ion-item
+          *ngIf="!p.hide"
+          (click)="patientDetail(p.id)"
+          button
+          detail="false">
+          <ion-icon 
+            slot="start" 
+            [ios]="'alert-circle' + '-outline'" 
+            [md]="'alert-circle' + '-sharp'"
+            [color]="p.risk > 2.99 ? 'danger' : p.risk > 1.99 ? 'warning' : 'success'"></ion-icon>
+          <ion-label>
+            <h2>{{ p.last_name }}, {{ p.first_name}} ({{ p.age }})</h2>
+            <p>
+              <ion-icon 
+                [ios]="'call' + '-outline'" 
+                [md]="'call' + '-sharp'">
+              </ion-icon>
+              {{ p.phone }}
+            </p>
+            <p>
+              <ion-icon 
+                [ios]="'calendar' + '-outline'" 
+                [md]="'calendar' + '-sharp'">
+              </ion-icon>
+              {{ p.assessment_date }}
+            </p>
+          </ion-label>
+          <ion-button slot="end" *ngIf="p.pregnant" color="secondary">
+            Pregnant
+          </ion-button>
+          <ion-button slot="end" *ngIf="p.conditions" color="tertiary">
+            Pre-existing Conditions
+          </ion-button>
+          <ion-button slot="end" *ngIf="p.exposure_community && !p.diagnosis || p.exposure_individual && !p.diagnosis || p.exposure_travel && !p.diagnosis" color="primary">
+            Possible Exposure
+          </ion-button>
+          <ion-button slot="end" *ngIf="p.count > 0" color="warning">
+            Symptoms ({{ p.count }})
+          </ion-button>
+          <ion-button slot="end" *ngIf="p.diagnosis" color="danger">
+            Tested Positive
+          </ion-button>
+        </ion-item>
+      </div>
+    </ion-list>
   </div>
 </ion-content>

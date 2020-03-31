@@ -1,0 +1,11 @@
+{
+  "appId": "com.andaman7.dash",
+  "appName": "andaman7dash",
+  "bundledWebRuntime": false,
+  "npmClient": "npm",
+  "webDir": "www",
+  "cordova": {},
+  "server": {
+    "url": "http://10.0.0.94:8100"
+  }
+}
