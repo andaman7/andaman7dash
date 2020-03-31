@@ -26,8 +26,12 @@ patients.forEach(function(obj) {
         obj.symptom_onset = "N/A"
     }
     obj.medications = obj["medications[random(0,5)]"];
-    obj.medications = obj.medications.split(', ');
-    obj.conditions = obj.conditions.split(', ');
+    if (obj.medications.length) {
+        obj.medications = obj.medications.split(', ');
+    }
+    if (obj.conditions.length) {
+        obj.conditions = obj.conditions.split(', ');
+    }
     try {
         db.collection("patients").add({
             assessment_date: obj.assessment_date,

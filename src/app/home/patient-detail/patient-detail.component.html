@@ -125,11 +125,14 @@
               <ion-icon slot="start" [ios]="'medkit' + '-outline'" [md]="'medkit' + '-sharp'"></ion-icon>
               <ion-label text-wrap>
                 <h3>Conditions</h3>
-                <h2>
-                  <ion-text [color]="(patient$ | async)?.conditions.length ? 'danger' : ''">
-                    {{ (patient$ | async)?.conditions | titlecase }}
-                  </ion-text>
+                <h2 *ngIf="(patient$ | async)?.conditions.length; else none">
+                  <ion-chip *ngFor="let c of (patient$ | async)?.conditions" color="danger">
+                    {{ c | titlecase }}
+                  </ion-chip>
                 </h2>
+                <ng-template #none>
+                  <h2>N/A</h2>
+                </ng-template>
               </ion-label>
             </ion-item>
           </ion-col>
@@ -169,7 +172,14 @@
           <ion-icon slot="start" [ios]="'reader' + '-outline'" [md]="'reader' + '-sharp'"></ion-icon>
           <ion-label text-wrap>
             <h3>Medications</h3>
-            <h2>{{ (patient$ | async)?.medications }}</h2>
+            <h2 *ngIf="(patient$ | async)?.medications.length; else none">
+              <ion-chip *ngFor="let m of (patient$ | async)?.medications">
+                {{ m | titlecase }}
+              </ion-chip>
+            </h2>
+            <ng-template #none>
+              <h2>N/A</h2>
+            </ng-template>
           </ion-label>
         </ion-item>
       </div>

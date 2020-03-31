@@ -90,8 +90,8 @@
           <ion-button slot="end" *ngIf="p.pregnant" color="secondary">
             Pregnant
           </ion-button>
-          <ion-button slot="end" *ngIf="p.conditions" color="tertiary">
-            Pre-existing Conditions
+          <ion-button slot="end" *ngIf="p.conditions.length" color="tertiary">
+            Pre-existing Conditions ({{ p.conditions.length }})
           </ion-button>
           <ion-button slot="end" *ngIf="p.exposure_community && !p.diagnosis || p.exposure_individual && !p.diagnosis || p.exposure_travel && !p.diagnosis" color="primary">
             Possible Exposure
